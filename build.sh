@@ -3,7 +3,10 @@
 set -o errexit
 
 echo "📦 Installing composer production dependencies..."
-composer install --no-dev --optimize-autoloader --no-interaction
+composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --ignore-platform-reqs
+
+echo "⚙️ Running package discovery..."
+php artisan package:discover --ansi
 
 echo "⚙️ Caching configuration, routes, and views..."
 php artisan config:cache

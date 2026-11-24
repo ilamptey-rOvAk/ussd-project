@@ -7,19 +7,22 @@ WORKDIR /var/www
 RUN apk add --no-cache \
     sqlite-dev \
     libzip-dev \
+    libxml2-dev \
     zip \
     unzip \
     oniguruma-dev \
     curl-dev \
-    libpng-dev \
-    icu-dev \
     && docker-php-ext-install -j$(nproc) \
     pdo \
     pdo_sqlite \
     mbstring \
     zip \
     pcntl \
-    bcmath
+    bcmath \
+    dom \
+    xml \
+    xmlwriter \
+    simplexml
 
 # Copy Composer binary from official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -27,14 +30,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www
 
-# Install production PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Ensure environment file exists for artisan and prepare directories
+RUN cp -n .env.example .env 2>/dev/null || true \
+    && mkdir -p storage/framework/{sessions,views,cache} database \
+    && touch database/database.sqlite \
+    && chmod -R 777 storage bootstrap/cache database
 
-# Prepare storage permissions and database directory
-RUN mkdir -p /var/www/storage/framework/{sessions,views,cache} \
-    && mkdir -p /var/www/database \
-    && touch /var/www/database/database.sqlite \
-    && chmod -R 777 /var/www/storage /var/www/bootstrap/cache /var/www/database
+# Install production dependencies without running scripts that require runtime env
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --ignore-platform-reqs
+
+# Run package discovery now that autoload and extensions are present
+RUN php artisan package:discover --ansi
 
 # Default port expected by Render is 10000 (or $PORT)
 ENV PORT=10000
