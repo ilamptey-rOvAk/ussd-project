@@ -24,6 +24,14 @@ class UssdController extends Controller
             ]);
         }
 
+        // Log the exact incoming payload from Nalo gateway
+        $rawPayload = $request->all();
+        Log::info('📥 [Nalo USSD] Incoming Webhook Request:', [
+            'payload' => $rawPayload,
+            'ip' => $request->ip(),
+            'headers' => $request->header(),
+        ]);
+
         // Handle POST USSD callback
         $userId = $request->input('USERID') ?? config('ussd.user_id', 'AIK12345');
         $msisdn = (string) ($request->input('MSISDN') ?? '');
@@ -53,7 +61,7 @@ class UssdController extends Controller
                 . "2. Feeling sad\n"
                 . "3. Feeling frisky";
 
-            return $this->buildResponse($userId, $msisdn, $welcomeMsg, true);
+            return $this->buildResponse($userId, $msisdn, $userdata, $welcomeMsg, true);
         }
 
         $feelings = config('ussd.feelings', []);
@@ -72,7 +80,7 @@ class UssdController extends Controller
                     . "2. Money problems\n"
                     . "3. Family issues";
 
-                return $this->buildResponse($userId, $msisdn, $reasonMsg, true);
+                return $this->buildResponse($userId, $msisdn, $userdata, $reasonMsg, true);
             }
 
             // Invalid input on welcome screen
@@ -81,7 +89,7 @@ class UssdController extends Controller
                 . "2. Feeling sad\n"
                 . "3. Feeling frisky";
 
-            return $this->buildResponse($userId, $msisdn, $retryMsg, true);
+            return $this->buildResponse($userId, $msisdn, $userdata, $retryMsg, true);
         }
 
         // Step 2: User selecting a reason
@@ -98,7 +106,7 @@ class UssdController extends Controller
                 $finalMsg = "You are feeling {$feeling} because of {$reason}.\n"
                     . "Feel well soon!";
 
-                return $this->buildResponse($userId, $msisdn, $finalMsg, false);
+                return $this->buildResponse($userId, $msisdn, $userdata, $finalMsg, false);
             }
 
             // Invalid input on reason screen
@@ -107,24 +115,30 @@ class UssdController extends Controller
                 . "2. Money problems\n"
                 . "3. Family issues";
 
-            return $this->buildResponse($userId, $msisdn, $retryMsg, true);
+            return $this->buildResponse($userId, $msisdn, $userdata, $retryMsg, true);
         }
 
         // Session completed or unknown state
         $closingMsg = "Your session has ended. Thank you!";
-        return $this->buildResponse($userId, $msisdn, $closingMsg, false);
+        return $this->buildResponse($userId, $msisdn, $userdata, $closingMsg, false);
     }
 
     /**
      * Build standardized Nalo Solutions USSD JSON response.
+     * Table 2.0: USERID, MSISDN, USERDATA, MSG, MSGTYPE
      */
-    protected function buildResponse(string $userId, string $msisdn, string $message, bool $continueSession): JsonResponse
+    protected function buildResponse(string $userId, string $msisdn, string $userdata, string $message, bool $continueSession): JsonResponse
     {
-        return response()->json([
+        $payload = [
             'USERID' => $userId,
             'MSISDN' => $msisdn,
+            'USERDATA' => $userdata,
             'MSG' => $message,
             'MSGTYPE' => (bool) $continueSession,
-        ]);
+        ];
+
+        Log::info('📤 [Nalo USSD] Outgoing Response:', $payload);
+
+        return response()->json($payload);
     }
 }
