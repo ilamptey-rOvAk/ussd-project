@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: nalo-ussd-laravel-service
+    env: php
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "heroku-php-apache2 public/"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: "https://nalo-ussd-laravel-service.onrender.com"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: NALO_USER_ID
+        value: "NALOTest"
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: "/tmp/database.sqlite"
