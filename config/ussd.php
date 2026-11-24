@@ -10,7 +10,9 @@ return [
     |
     */
 
-    'user_id' => env('NALO_USER_ID', 'NALOTest'),
+    'user_id' => env('NALO_USER_ID', 'AIK12345'),
+
+    'shortcode' => env('USSD_SHORTCODE', '*920*29#'),
 
     'feelings' => [
         '1' => 'fine',

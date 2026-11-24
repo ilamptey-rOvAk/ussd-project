@@ -45,10 +45,10 @@ class SimulateUssdCommand extends Command
         $this->line("Network: {$network}");
         $this->line("Session ID: {$sessionId}");
         $this->line(str_repeat('=', 60));
-        $this->comment("Dialing *920# ...\n");
+        $this->comment("Dialing *920*29# ...\n");
 
         $isFirst = true;
-        $inputData = '*920#';
+        $inputData = '*920*29#';
 
         while (true) {
             $payload = [

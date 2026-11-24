@@ -31,10 +31,10 @@ echo "Phone (MSISDN): {$phone}" . PHP_EOL;
 echo "Network: {$network}" . PHP_EOL;
 echo "Session ID: {$sessionId}" . PHP_EOL;
 echo str_repeat('=', 60) . PHP_EOL;
-echo "Dialing *920# ...\n\n";
+echo "Dialing *920*29# ...\n\n";
 
 $isFirst = true;
-$inputData = '*920#';
+$inputData = '*920*29#';
 
 while (true) {
     $payload = [

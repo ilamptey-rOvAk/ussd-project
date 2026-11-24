@@ -44,8 +44,8 @@ class UssdController extends Controller
             ]
         );
 
-        // Reset to initial screen if it's the first dial or newly created session
-        if ($isFirstDial || $session->wasRecentlyCreated) {
+        // Reset to initial screen if it's the first dial, newly created session, or a shortcode dial string
+        if ($isFirstDial || $session->wasRecentlyCreated || str_starts_with($userdata, '*')) {
             $session->reset($msisdn, $network);
 
             $welcomeMsg = "Welcome! How are you feeling today?\n"
