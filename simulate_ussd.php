@@ -20,7 +20,7 @@ $kernel->bootstrap();
 $targetUrl = $argv[1] ?? null;
 $phone = '233241234567';
 $network = 'MTN';
-$userId = config('ussd.user_id', 'NALOTest');
+$userId = config('ussd.user_id', 'AIK12345');
 $sessionId = 'SIM-' . time() . '-' . substr(bin2hex(random_bytes(4)), 0, 6);
 
 echo str_repeat('=', 60) . PHP_EOL;

@@ -34,7 +34,7 @@ class SimulateUssdCommand extends Command
         $targetUrl = $this->option('url');
         $phone = $this->option('phone');
         $network = $this->option('network');
-        $userId = $this->option('userid') ?: config('ussd.user_id', 'NALOTest');
+        $userId = $this->option('userid') ?: config('ussd.user_id', 'AIK12345');
         $sessionId = 'SIM-' . time() . '-' . substr(bin2hex(random_bytes(4)), 0, 6);
 
         $this->line(str_repeat('=', 60));

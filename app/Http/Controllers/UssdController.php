@@ -25,7 +25,7 @@ class UssdController extends Controller
         }
 
         // Handle POST USSD callback
-        $userId = $request->input('USERID') ?? config('ussd.user_id', 'NALOTest');
+        $userId = $request->input('USERID') ?? config('ussd.user_id', 'AIK12345');
         $msisdn = (string) ($request->input('MSISDN') ?? '');
         $userdata = trim((string) ($request->input('USERDATA') ?? ''));
         $network = (string) ($request->input('NETWORK') ?? '');

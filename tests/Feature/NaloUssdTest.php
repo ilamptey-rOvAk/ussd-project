@@ -10,7 +10,7 @@ class NaloUssdTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected string $userId = 'NALOTest';
+    protected string $userId = 'AIK12345';
     protected string $msisdn = '233541234567';
     protected string $sessionId = 'SESSION-TEST-LARAVEL-1001';
 

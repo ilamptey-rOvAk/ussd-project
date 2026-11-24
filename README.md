@@ -81,7 +81,7 @@ Nalo sends a `POST` request with JSON (or Form URL-Encoded):
 
 ```json
 {
-  "USERID": "NALOTest",
+  "USERID": "AIK12345",
   "MSISDN": "233541234567",
   "USERDATA": "1",
   "MSGTYPE": false,
@@ -105,7 +105,7 @@ Your endpoint returns `200 OK` with JSON:
 
 ```json
 {
-  "USERID": "NALOTest",
+  "USERID": "AIK12345",
   "MSISDN": "233541234567",
   "MSG": "Welcome! How are you feeling today?\n1. Feeling fine\n2. Feeling sad\n3. Feeling frisky",
   "MSGTYPE": true
@@ -184,7 +184,7 @@ Sample simulator output:
 ============================================================
 📱 NALO USSD PHONE SIMULATOR (LARAVEL)
 Target: Internal Laravel Kernel
-User ID: NALOTest
+User ID: AIK12345
 Phone (MSISDN): 233241234567
 Network: MTN
 Session ID: SIM-1795534522-8d2658

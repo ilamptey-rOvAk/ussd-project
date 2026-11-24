@@ -17,7 +17,7 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: NALO_USER_ID
-        value: "NALOTest"
+        value: "AIK12345"
       - key: DB_CONNECTION
         value: sqlite
       - key: DB_DATABASE
