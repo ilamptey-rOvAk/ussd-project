@@ -30,10 +30,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www
 
-# Ensure environment file exists for artisan and prepare directories
-RUN cp -n .env.example .env 2>/dev/null || true \
-    && mkdir -p storage/framework/{sessions,views,cache} database \
-    && touch database/database.sqlite \
+# Prepare directories and permissions
+RUN mkdir -p storage/framework/{sessions,views,cache} database bootstrap/cache \
     && chmod -R 777 storage bootstrap/cache database
 
 # Install production dependencies without running scripts that require runtime env
@@ -42,9 +40,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Run package discovery now that autoload and extensions are present
 RUN php artisan package:discover --ansi
 
+# Make entrypoint script executable
+RUN chmod +x /var/www/docker-entrypoint.sh
+
 # Default port expected by Render is 10000 (or $PORT)
 ENV PORT=10000
 EXPOSE 10000
 
-# Run migrations and start server binding to 0.0.0.0 and $PORT
-CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+ENTRYPOINT ["/var/www/docker-entrypoint.sh"]
